@@ -21,4 +21,6 @@ public class MvcConfig implements WebMvcConfigurer {
         return new HiddenHttpMethodFilter();
     }
 
+    // HTML form에서 PUT, DELETE 등의 메서드를 지원하기 위해 사용
+    // 기본적으로 HTTP는 GET과 POST만 지원하기 때문에, 이 필터를 사용하면 form의 method 속성을 _method 파라미터로 전달하여 실제 HTTP 메서드를 변경할 수 있음
 }

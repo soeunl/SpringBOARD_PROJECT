@@ -8,7 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-public class SecurityConfig {
+public class SecurityConfig { // Spring Security 설정을 담당하는 클래스
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
