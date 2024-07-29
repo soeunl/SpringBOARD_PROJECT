@@ -2,6 +2,7 @@ package org.choongang.member.controllers;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.choongang.member.services.MemberSaveService;
 import org.choongang.member.validator.JoinValidator;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class MemberController {
 
     private final JoinValidator joinValidator;
+    private final MemberSaveService memberSaveService;
 
     @GetMapping("/join")
     public String Join(@ModelAttribute RequestJoin form) {
@@ -36,6 +38,8 @@ public class MemberController {
             // 이상이 없을 때만 아래쪽 return "redirect:/member/login"으로 넘어간다
             return "front/member/join";
         }
+
+        memberSaveService.save(form);
 
         return "redirect:/member/login";
     }

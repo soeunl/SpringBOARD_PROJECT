@@ -17,6 +17,7 @@ public class SecurityConfig { // Spring Security 설정을 담당하는 클래�
         return http.build();
     }
 
+    @Bean
     public PasswordEncoder passwordEncoder() {
         // 스프링 시큐리티에는 비크립트 비밀번호 해시화 기능이 포함되어 있다.
         // 인코딩도 해주고 비밀번호 검증도 해준다.
