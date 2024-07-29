@@ -17,7 +17,7 @@
     <script th:src="@{/common/js/common.js}"></script>
 <!--    모든 공통 js-->
     <script th:src="@{/front/js/common.js}"></script>
-<!--    프론트에서의 공통 css-->
+<!--    프론트에서의 공통 js-->
     <script th:if="${addScript != null}" th:each="jsFile : ${addScript}" th:src="@{/front/js/{file}.js(file=${jsFile})}"></script>
     <th:block layout:fragment="addScript"></th:block>
 </head>

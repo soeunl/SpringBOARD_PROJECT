@@ -1,0 +1,52 @@
+package org.choongang.member.validator;
+
+import org.choongang.global.validators.MobileValidator;
+import org.choongang.global.validators.PasswordValidator;
+import org.choongang.member.controllers.RequestJoin;
+import org.springframework.stereotype.Component;
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
+
+@Component
+public class JoinValidator implements Validator, PasswordValidator, MobileValidator {
+    @Override
+    public boolean supports(Class<?> clazz) { // 검증하고자 하는 커맨드 객체의 제한이다.
+        return clazz.isAssignableFrom(RequestJoin.class);
+    }
+    // 매개변수가 클래스 클래스로 넘어옴
+    // RequestJoin 커맨드 객체만 검증하도록 제한
+
+    @Override
+    public void validate(Object target, Errors errors) {
+        if(errors.hasErrors()) {
+            return;
+        }
+        /**
+         //         * 1. 이미 가입된 회원인지 체크
+         //         * 2. 비밀번호, 비밀번호 확인 일치 여부
+         //         * 3. 비밀번호 복잡성 체크
+         //         * 4. 휴대전화번호 형식 체크
+         //         */
+
+        RequestJoin form = (RequestJoin) target;
+        String email = form.getEmail();
+        String password = form.getPassword();
+        String confirmPassword = form.getConfirmPassword();
+        String mobile = form.getMobile();
+
+        // 2. 비밀번호, 비밀번호 확인 일치 여부
+        if (!password.equals(confirmPassword)) {
+            errors.rejectValue("confirmPassword", "Mismatch.password");
+        }
+
+        // 3. 비밀번호 복잡성 체크 - 알파벳 대소문자 각각 1개 이상, 숫자 1개 이상, 특수문자 1개 이상
+        if (!alphaCheck(password, false) || !numberCheck(password) || !specialCharCheck(password)) {
+                errors.rejectValue("password", "Complexity");
+        }
+        
+        // 4. 전화번호 형식 체크
+        if(!mobileCheck(mobile)) {
+            errors.rejectValue("mobile", "Mobile");
+        }
+    }
+}
