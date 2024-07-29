@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        <th:block th:if="${PageTitle != null}" th:text="${#strings.concat(pageTitle, ' - ')}"></th:block> 사이트 제목
+    </title>
+    <link rel="stylesheet" type="text/css" th:href="@{/common/css/style.css}">
+<!--    모든 공통 css-->
+    <link rel="stylesheet" type="text/css" th:href="@{/admin/css/style.css}">
+<!--    프론트에서의 공통 css-->
+    <link th:if="${addCss != null}" rel="stylesheet" type="text/css" th:each="cssFile: ${addCss}"
+          th:href="@{/mobile/css/{file}.css(file=${cssFile})}">
+    <th:block layout:fragment="addCss"></th:block>
+
+    <script th:src="@{/common/js/common.js}"></script>
+<!--    모든 공통 js-->
+    <script th:src="@{/mobile/js/common.js}"></script>
+<!--    프론트에서의 공통 css-->
+    <script th:if="${addScript != null}" th:each="jsFile : ${addScript}" th:src="@{/mobile/js/{file}.js(file=${jsFile})}"></script>
+    <th:block layout:fragment="addScript"></th:block>
+</head>
+<body>
+    <header th:replace="~{mobile/outlines/_header::common}"></header>
+    <main layout:fragment="content"></main>
+    <footer th:replace="~{mobile/outlines/_footer::common}"></footer>
+    <iframe name="ifrmHidden" class="dn"></iframe>
+</body>
+</html>

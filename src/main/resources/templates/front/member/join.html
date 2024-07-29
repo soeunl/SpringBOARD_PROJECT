@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{front/layouts/main}">
+
+    <main layout:fragment="content">
+<!--        치환되는 부분 안에서만 정의 가능하다-->
+        <h1 th:text="#{회원가입}"></h1>
+    </main>
+</html>
