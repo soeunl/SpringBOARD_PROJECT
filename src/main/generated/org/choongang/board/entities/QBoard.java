@@ -19,7 +19,7 @@ public class QBoard extends EntityPathBase<Board> {
 
     public static final QBoard board = new QBoard("board");
 
-    public final org.choongang.member.entities.QBaseMemberEntity _super = new org.choongang.member.entities.QBaseMemberEntity(this);
+    public final org.choongang.global.entities.QBaseMemberEntity _super = new org.choongang.global.entities.QBaseMemberEntity(this);
 
     public final StringPath bId = createString("bId");
 

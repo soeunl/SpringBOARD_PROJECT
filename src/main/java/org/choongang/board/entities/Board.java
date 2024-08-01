@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.choongang.member.entities.BaseMemberEntity;
+import org.choongang.global.entities.BaseMemberEntity;
 
 @Data
 @Entity
