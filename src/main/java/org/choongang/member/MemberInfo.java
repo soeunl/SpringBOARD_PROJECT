@@ -14,7 +14,7 @@ public class MemberInfo implements UserDetails {
 
     private String email;
     private String password;
-    private Collection<? extends GrantedAuthority> authorities;
+    private Collection<? extends GrantedAuthority> authorities; // 다중 권한이 있을 수 있으므로 콜렉션으로 되어있다. List나 Set 형태로 넣기 위해!
     private Member member;
 
     @Override
@@ -48,7 +48,7 @@ public class MemberInfo implements UserDetails {
     }
 
     @Override
-    public boolean isEnabled() {
+    public boolean isEnabled() { // 활성화된 계정이니?
         return true;
     }
 }
