@@ -1,0 +1,6 @@
+<!--이 페이지는 스크립트를 실행하기 위해서 존재한다-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<script th:if="${script != null}" th:utext="${script}"></script>
+<!--자바스크립트로 정의하는 예외가 필요할 때 공통적으로 필요하다-->
+</html>

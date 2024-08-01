@@ -3,10 +3,8 @@ package org.choongang.member.controllers;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.choongang.board.entities.Board;
-import org.choongang.board.repositories.BoardRepository;
+import org.choongang.global.exceptions.ExceptionProcessor;
 import org.choongang.member.MemberInfo;
-import org.choongang.member.MemberUtil;
 import org.choongang.member.services.MemberSaveService;
 import org.choongang.member.validator.JoinValidator;
 import org.springframework.security.core.Authentication;
@@ -24,12 +22,10 @@ import java.security.Principal;
 @RequiredArgsConstructor
 @SessionAttributes("requestLogin")
 @Slf4j
-public class MemberController {
+public class MemberController implements ExceptionProcessor { // 인터페이스로 설정한 예외처리 프로세서
 
     private final JoinValidator joinValidator;
     private final MemberSaveService memberSaveService;
-    private final MemberUtil memberUtil;
-    private final BoardRepository boardRepository;
 
     @ModelAttribute // 세션 범위 내에서 속성이 추가된다
     public RequestLogin requestLogin() {
@@ -38,6 +34,7 @@ public class MemberController {
 
     @GetMapping("/join")
     public String Join(@ModelAttribute RequestJoin form) {
+
         return "front/member/join"; // front는 PC mobile은 모바일
     }
 
@@ -101,26 +98,5 @@ public class MemberController {
         } else { // 미로그인 상태 - String / anonymousUser (getPrincipal())
             log.info("getPrincipal(): {}", authentication.getPrincipal());
         }
-    }
-
-    @ResponseBody // void일때는 적기~!
-    @GetMapping("/test4")
-    public void test4() {
-        log.info("로그인 여부 : {}", memberUtil.isLogin());
-        log.info("로그인 회원 : {}", memberUtil.getMember());
-    }
-
-    @ResponseBody
-    @GetMapping("/test5")
-    public void test5() {
-
-        Board board = Board.builder()
-                .bId("freetalk2")
-                .bName("자유게시판")
-                .build();
-
-        boardRepository.saveAndFlush(board);
-
-
     }
 }
