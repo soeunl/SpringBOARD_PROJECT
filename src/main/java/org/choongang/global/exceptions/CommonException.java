@@ -11,6 +11,7 @@ import java.util.Map;
 @Setter
 public class CommonException extends RuntimeException {
 
+    private boolean errCode;
     private HttpStatus status;
     private Map<String, List<String>> errorMessage;
 

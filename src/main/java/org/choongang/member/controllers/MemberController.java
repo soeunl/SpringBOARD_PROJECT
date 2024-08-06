@@ -4,18 +4,13 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.choongang.global.exceptions.ExceptionProcessor;
-import org.choongang.member.MemberInfo;
 import org.choongang.member.services.MemberSaveService;
 import org.choongang.member.validator.JoinValidator;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
-
-import java.security.Principal;
 
 @Controller
 @RequestMapping("/member")
@@ -65,7 +60,7 @@ public class MemberController implements ExceptionProcessor { // 인터페이스
         if (StringUtils.hasText(code)) {
             errors.reject(code, form.getDefaultMessage());
 
-            // 비번 만료인 경우 비번 재설치 페이지 이동
+            // 비번 만료인 경우 비번 재설정 페이지 이동
             if (code.equals("CredentialsExpired.Login")) {
                 return "redirect:/member/password/reset";
             }
@@ -74,29 +69,43 @@ public class MemberController implements ExceptionProcessor { // 인터페이스
     }
 
     @ResponseBody
-    @GetMapping("/test")
-    public void test(Principal principal) {
-        log.info("로그인 아이디: {}", principal.getName());
+    @GetMapping("/test4")
+    @PreAuthorize("isAuthenticated()")
+    public void test4() {
+        log.info("test4 - 회원만 접근 가능합니다");
     }
 
     @ResponseBody
-    @GetMapping("/test2")
-    public void test2(@AuthenticationPrincipal MemberInfo memberInfo) {
-        log.info("로그인 회원 : {}", memberInfo.toString());
+    @GetMapping("/test5")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public void test5() {
+        log.info("test5 - 관리자만 접근 가능");
     }
 
-    @ResponseBody
-    @GetMapping("/test3")
-    public void test3() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        log.info("로그인 상태: {}", authentication.isAuthenticated());
-        if (authentication.isAuthenticated() && authentication.getPrincipal() instanceof MemberInfo) { // 로그인 상태 - UserDetails 구현체(getPrincipal())
-            ;
-            MemberInfo memberInfo = (MemberInfo) authentication.getPrincipal();
-            log.info("로그인 회원: {}", memberInfo.toString());
-        } else { // 미로그인 상태 - String / anonymousUser (getPrincipal())
-            log.info("getPrincipal(): {}", authentication.getPrincipal());
-        }
-    }
+//    @ResponseBody
+//    @GetMapping("/test")
+//    public void test(Principal principal) {
+//        log.info("로그인 아이디: {}", principal.getName());
+//    }
+//
+//    @ResponseBody
+//    @GetMapping("/test2")
+//    public void test2(@AuthenticationPrincipal MemberInfo memberInfo) {
+//        log.info("로그인 회원 : {}", memberInfo.toString());
+//    }
+//
+//    @ResponseBody
+//    @GetMapping("/test3")
+//    public void test3() {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//
+//        log.info("로그인 상태: {}", authentication.isAuthenticated());
+//        if (authentication.isAuthenticated() && authentication.getPrincipal() instanceof MemberInfo) { // 로그인 상태 - UserDetails 구현체(getPrincipal())
+//            ;
+//            MemberInfo memberInfo = (MemberInfo) authentication.getPrincipal();
+//            log.info("로그인 회원: {}", memberInfo.toString());
+//        } else { // 미로그인 상태 - String / anonymousUser (getPrincipal())
+//            log.info("getPrincipal(): {}", authentication.getPrincipal());
+//        }
+//    }
 }

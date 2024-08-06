@@ -9,7 +9,7 @@
                 <a th:href="@{/member/login}" th:text="#{로그인}"></a>
             </th:block>
             <th:block sec:authorize="isAuthenticated()">
-                <h3 th:text="${#messages.msg('LOGIN_MSG', loggedMember.userName, loggedMember.email)}"></h3><br>
+                <h3 th:if="${loggedMember != null}" th:text="${#messages.msg('LOGIN_MSG', loggedMember.userName, loggedMember.email)}"></h3><br>
                 <a th:href="@{/member/logout}" th:text="#{로그아웃}"></a>
                 <a th:href="@{/mypage}" th:text="#{마이페이지}"></a>
 

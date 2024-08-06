@@ -5,6 +5,7 @@ import org.choongang.member.services.LoginSuccessHandler;
 import org.choongang.member.services.MemberAuthenticationEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -56,11 +57,18 @@ public class SecurityConfig { // Spring Security 설정을 담당하는 클래�
 
         // 무엇인가 발생하면 상세한 처리를 한다
         http.exceptionHandling(c -> {
-            c.authenticationEntryPoint(new MemberAuthenticationEntryPoint());
+            c.authenticationEntryPoint(new MemberAuthenticationEntryPoint())
+                    .accessDeniedHandler((req, res, e) -> {
+                        res.sendError(HttpStatus.UNAUTHORIZED.value());
+              });
         });
 
         /* 인가(접근 통제) 설정 E */
 
+        // iframe 자원 출처를 같은 서버 자원으로 한정
+        // 시큐리티 기본 설정으로 iframe으로 전송하는게 차단되어 있기 때문에 풀어주는 것!
+        // 같은 서버 자원에서 오는 페이지에 대해서만 해당 페이지가 iframe 안에 포함될 수 있도록 허용 즉, 동일한 도메인에서 오는 요청에 대해서만 페이지를 iframe 안에 포함시키는 것이다~
+        http.headers(c -> c.frameOptions(f -> f.sameOrigin()));
 
         return http.build();
     }

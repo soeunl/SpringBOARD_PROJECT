@@ -5,6 +5,7 @@ import org.choongang.global.exceptions.script.AlertBackException;
 import org.choongang.global.exceptions.script.AlertException;
 import org.choongang.global.exceptions.script.AlertRedirectException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
@@ -16,7 +17,7 @@ public interface ExceptionProcessor {
 
         ModelAndView mv = new ModelAndView();
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR; // 기본 응답 코드는 500
-        String tpl = "templates/error/error";
+        String tpl = "error/error";
 
         if (e instanceof CommonException commonException) {
             // commonException의 하위 객체이면 응답코드를 가지고 온다
@@ -43,6 +44,8 @@ public interface ExceptionProcessor {
 
                 mv.addObject("script", script); // 스크립트 형태로 출력
             }
+        } else if (e instanceof AccessDeniedException) {
+            status = HttpStatus.UNAUTHORIZED;
         }
 
         String url = request.getRequestURI();
@@ -53,8 +56,9 @@ public interface ExceptionProcessor {
         mv.addObject("message", e.getMessage());
         mv.addObject("status", status.value());
         mv.addObject("method", request.getMethod());
+        mv.addObject("path", url);
         mv.setStatus(status);
-        mv.setViewName("tpl");
+        mv.setViewName(tpl);
         return mv;
     }
 }
