@@ -1,16 +1,24 @@
 package org.choongang.file.service;
 
+import com.querydsl.core.BooleanBuilder;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.choongang.file.constants.FileStatus;
 import org.choongang.file.entities.FileInfo;
+import org.choongang.file.entities.QFileInfo;
 import org.choongang.file.exceptions.FileNotFoundException;
 import org.choongang.file.repositories.FileInfoRepository;
 import org.choongang.global.configs.FileProperties;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Objects;
 
+import static org.springframework.data.domain.Sort.Order.asc;
+
+// 개별 조회와 낱개 조회 구현
 @Service
 @RequiredArgsConstructor
 public class FileInfoService {
@@ -44,15 +52,42 @@ public class FileInfoService {
      * 파일 목록 조회
      * 
      * @param gid
-     * @param lacation
+     * @param location
      * @param status - All : 완료 + 미완료, DONE : 완료, UNDONE : 미완료
      * @return
      *
      */
 
-    public List<FileInfo> getList(String gid, String lacation, String status) {
-        return null;
+    public List<FileInfo> getList(String gid, String location, FileStatus status) {
+        // 이중 gid를 가장 많이 쓴다.
+        QFileInfo fileInfo = QFileInfo.fileInfo;
+        BooleanBuilder andBuilder = new BooleanBuilder();
+        andBuilder.and(fileInfo.gid.eq(gid));
+
+        if(StringUtils.hasText(location)) {
+            andBuilder.and(fileInfo.location.eq(location));
+        }
+
+        if(status != FileStatus.ALL) {
+            andBuilder.and(fileInfo.done.eq(status == FileStatus.DONE));
+            // DONE일때 일치하면 DONE, 일치하지 않으면 UNDONE
+        }
+
+        List<FileInfo> items = (List<FileInfo>) infoRepository.findAll(andBuilder, Sort.by(asc("createdAt")));
+
+        // 2차 추가 데이터 처리
+        items.forEach(this::addFileInfo);
+        return items;
     }
+
+    public List<FileInfo> getList(String gid, String location) {
+        return getList(gid, location, FileStatus.DONE);
+    }
+
+    public List<FileInfo> getList(String gid) {
+        return getList(gid, null, FileStatus.DONE);
+    }
+    // 유형을 다양하게 정의해서 편하게 사용하기 위해 메서드 오버로드를 했다.
 
     /**
      * 파일 정보 추가 처리
