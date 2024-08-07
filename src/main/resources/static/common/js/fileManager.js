@@ -12,11 +12,11 @@ const fileManager = {
     // gid, location -> 관광 상품이나 상품 등록 시 메인 이미지, 상세 이미지 등으로 나눠서 넣을 때 활용 가능
         try {
             if (!files || files.length == 0) {
-                throw new Error("파일을 선택하세요");
+                throw new Error("파일을 선택 하세요.");
             }
 
-            if (!gid || gid.trim()) {
-                throw new Error("필수 항목 누락입니다(gid)")
+            if (!gid || !gid.trim()) {
+                throw new Error("필수 항목 누락 입니다(gid).");
             }
 
             const formData = new FormData();
@@ -33,12 +33,24 @@ const fileManager = {
 
             const { ajaxLoad } = commonLib;
 
-            ajaxLoad('/file/upload', 'POST', formData);
+            ajaxLoad('/file/upload', 'POST', formData)
+                .then(res => {
+                    if (!res.success) {
+                        alert(res.message);
+                        return;
+                    }
+                    // 파일 업로드 후 처리는 다양, fileUploadCallback을 직접 상황에 맞게 정의 처리
+                    if (typeof parent.fileUploadCallback === 'function') {
+                        parent.fileUploadCallback(res.data);
+                    }
+                })
+                .catch(err => alert(err.message));
 
-        } catch(e) {
+        } catch (e) {
             console.error(e);
             alert(e.message);
         }
+        // 콜백방식을 사용하는 이유는 상황에 따라 다르게 처리하기 위함이다..?
     },
     /**
      * 파일 삭제
@@ -77,7 +89,7 @@ window.addEventListener("DOMContentLoaded", function () {
     } // 파일 업로드 버튼 이벤트 처리 E
 
     // 파일 업로드 처리
-    fileEl.addEventListener("change", function (e) {
+    fileEl.addEventListener("change", function(e) {
         const files = e.target.files;
         fileManager.upload(files, fileEl.gid, fileEl.location);
     });

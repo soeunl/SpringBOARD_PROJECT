@@ -7,8 +7,9 @@
     <meta name="csrf_header" th:content="${_csrf.headerName}">
     <meta name="rootUrl" th:content="@{/}" />
     <title>
-        <th:block th:if="${PageTitle != null}"
-        th:text="${#strings.concat(pageTitle, ' - ')}"></th:block> 사이트 제목
+        <th:block th:if="${pageTitle != null}"
+        th:text="${#strings.concat(pageTitle, ' - ')}"></th:block>
+        사이트 제목
     </title>
     <link rel="stylesheet" type="text/css" th:href="@{/common/css/style.css}">
 <!--    모든 공통 css-->
@@ -23,8 +24,8 @@
     <script th:src="@{/front/js/common.js}"></script>
 <!--    프론트에서의 공통 js-->
 
-    <script th:if="${addCommonScript != null}" th:each="jsFile : ${addCommonScript}" th:src="@{/common/js/{file}.js(file=${jsFile})}"></script>
     <th:block layout:fragment="addCommonScript"></th:block>
+    <script th:if="${addCommonScript != null}" th:each="jsFile : ${addCommonScript}" th:src="@{/common/js/{file}.js(file=${jsFile})}"></script>
 
     <script th:if="${addScript != null}" th:each="jsFile : ${addScript}" th:src="@{/front/js/{file}.js(file=${jsFile})}"></script>
     <th:block layout:fragment="addScript"></th:block>

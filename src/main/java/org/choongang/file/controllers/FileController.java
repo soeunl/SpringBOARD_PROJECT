@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.choongang.file.entities.FileInfo;
 import org.choongang.file.service.FileDeleteService;
 import org.choongang.file.service.FileInfoService;
-import org.choongang.file.service.FileUploadService;
 import org.choongang.file.services.FileDownloadService;
+import org.choongang.file.services.FileUploadService;
 import org.choongang.global.exceptions.RestExceptionProcessor;
 import org.choongang.global.rests.JSONData;
 import org.springframework.http.HttpStatus;
@@ -21,8 +21,8 @@ import java.util.List;
 public class FileController implements RestExceptionProcessor {
 
     private final FileUploadService uploadService;
+    private final FileDownloadService downloadService;
     private final FileInfoService infoService;
-    private final FileDownloadService fileDownloadService;
     private final FileDeleteService deleteService;
 
     @PostMapping("/upload")
@@ -41,14 +41,14 @@ public class FileController implements RestExceptionProcessor {
 
     @GetMapping("/download/{seq}")
     public void download(@PathVariable("seq") Long seq) {
-        fileDownloadService.download(seq);
+        downloadService.download(seq);
     }
-    
-    @DeleteMapping("/delete/{seq}") // 낱개 삭제
+
+    @DeleteMapping("/delete/{seq}")
     public JSONData delete(@PathVariable("seq") Long seq) {
         FileInfo data = deleteService.delete(seq);
 
-        return new JSONData(data); // 반환값을 JSON 형태로 내보낸다.
+        return new JSONData(data);
     }
 
     @DeleteMapping("/deletes/{gid}")
