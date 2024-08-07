@@ -9,7 +9,36 @@ const fileManager = {
      *
      */
     upload(file, gid, location) {
+    // gid, location -> 관광 상품이나 상품 등록 시 메인 이미지, 상세 이미지 등으로 나눠서 넣을 때 활용 가능
+        try {
+            if (!files || files.length == 0) {
+                throw new Error("파일을 선택하세요");
+            }
 
+            if (!gid || gid.trim()) {
+                throw new Error("필수 항목 누락입니다(gid)")
+            }
+
+            const formData = new FormData();
+            formData.append("gid", gid.trim());
+
+            for(const file of files) {
+                formData.append("file", file); // 앞에 있는 file이 전송되는 name값
+                // 스프링에서도 이 name값으로 찾을 수 있다
+            }
+
+            if (location && location.trim()) {
+                formData.append("location", location.trim());
+            }
+
+            const { ajaxLoad } = commonLib;
+
+            ajaxLoad('/file/upload', 'POST', formData);
+
+        } catch(e) {
+            console.error(e);
+            alert(e.message);
+        }
     },
     /**
      * 파일 삭제
@@ -39,11 +68,11 @@ window.addEventListener("DOMContentLoaded", function () {
             fileEl.value = ""; // 클릭했을때는 새로 올리는 것이니깐 선택 값 초기화
             delete fileEl.gid;
             delete fileEl.location;
-            const dataset = this.dataset;
+            const dataset = this.dataset; // dataset 이라는 속성을 이용해서 접근 가능하다. 추가, 제거, 삭제가 바로 반영이 가능하다
             fileEl.gid = dataset.gid;
             if(dataset.location) fileEl.location = dataset.location;
 
-            fileEl.click();
+            fileEl.click(); // 파일 태그는 메모리에!
         });
     } // 파일 업로드 버튼 이벤트 처리 E
 
