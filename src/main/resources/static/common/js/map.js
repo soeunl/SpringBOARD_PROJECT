@@ -25,6 +25,7 @@ const mapLib = {
         // 지도 가운데 좌표 처리
         const zoom = options?.zoom ?? 3; // 기본값 3
         const position = new kakao.maps.LatLng(center.lat, center.lng);
+
         const map = new kakao.maps.Map(mapEl, {
             center: position,
             level: zoom,
@@ -99,13 +100,80 @@ const mapLib = {
      * 키워드로 지도 출력
      *
      */
-    loadByKeyword(keyword, mapId, width = 300, height = 300, options) {
-        if (!keyword) return;
+    loadByKeyword(keyword, cnt = 0, mapId, width = 300, height = 300, options) {
+        if (!keyword?.trim()) return;
+
+        const ps = new kakao.maps.services.Places();
+        ps.keywordSearch(keyword.trim(), (items, status, pagination) => {
+            if (status === kakao.maps.services.Status.OK) { // 검색 성공
+                // cnt가 0이면 전체 목록, 1 이상이면 갯수 제한
+                items = cnt > 0 ? items.slice(0, cnt + 1) : items;
+
+                options = options ?? {};
+                options.center = { lat: items[0].y, lng: items[0].x };
+                options.marker = [];
+
+                items.forEach(item => {
+                    options.marker.push({lat: item.y, lng: item.x});
+                });
+            }
+
+            mapLib.load(mapId, width, height, options);
+        });
+    },
+    /**
+     * 주소로 지도 검색
+     *
+     */
+    loadByAddress(address, cnt = 0, mapId, width = 300, height = 300, options) {
+
+        if (!address?.trim()) return;
+
+        const geocoder = new kakao.maps.services.Geocoder();
+
+        geocoder.addressSearch(address, (items, status) => {
+            if (status === kakao.maps.services.Status.OK) {
+                // cnt가 0이면 전체 목록, 1 이상이면 갯수 제한
+                items = cnt > 0 ? items.slice(0, cnt + 1) : items;
+
+                options = options ?? {};
+                options.center = { lat: items[0].y, lng: items[0].x };
+                options.marker = [];
+
+                items.forEach(item => {
+                    options.marker.push({lat: item.y, lng: item.x});
+                });
+            }
+            mapLib.load(mapId, width, height, options);
+        });
+    },
+    /**
+     * 분류별로 지도 조회
+     *
+     */
+    loadByCategory(category, cnt = 0, mapId, width = 300, height = 300, options) {
+        if (!category?.trim()) return;
 
         const ps = new kakao.maps.services.Places();
 
-        ps.keywordSearch('이태원 맛집', (data, status, pagination) => {
+        ps.categorySearch(category.trim(), placesSearchCB, {useMapBounds:true});
 
-        });
+        function placesSearchCB (items, status, pagination) {
+            console.log(pagination);
+            if (status === kakao.maps.services.Status.OK) {
+                // cnt가 0이면 전체 목록, 1 이상이면 갯수 제한
+                items = cnt > 0 ? items.slice(0, cnt + 1) : items;
+
+                options = options ?? {};
+                options.center = { lat: items[0].y, lng: items[0].x };
+                options.marker = [];
+
+                items.forEach(item => {
+                    options.marker.push({lat: item.y, lng: item.x});
+                });
+            }
+
+            mapLib.load(mapId, width, height, options);
+        }
     }
 };
