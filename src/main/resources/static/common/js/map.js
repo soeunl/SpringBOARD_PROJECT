@@ -34,9 +34,7 @@ const mapLib = {
         // 마커 출력 처리 S
         if (marker) {
             if (!Array.isArray(marker)) marker = [marker];
-            console.log("marker", marker);
             const markers = marker.map(m => {
-                console.log("m", m);
                 const { lat, lng, image, info } = m;
                 const opt = { position: new kakao.maps.LatLng(lat, lng)};
 
@@ -89,6 +87,25 @@ const mapLib = {
      *
      */
     loadCurrentLocation(mapId, width = 300, height = 300, options) {
+        navigator.geolocation.getCurrentPosition(pos => {
+            const { latitude, longitude } = pos.coords;
+            options = options ?? {};
+            options.center = { lat: latitude, lng: longitude };
 
+            mapLib.load(mapId, width, height, options);
+        });
+    },
+    /**
+     * 키워드로 지도 출력
+     *
+     */
+    loadByKeyword(keyword, mapId, width = 300, height = 300, options) {
+        if (!keyword) return;
+
+        const ps = new kakao.maps.services.Places();
+
+        ps.keywordSearch('이태원 맛집', (data, status, pagination) => {
+
+        });
     }
 };

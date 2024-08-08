@@ -4,17 +4,12 @@
       layout:decorate="~{front/layouts/main}">
 
 <th:block layout:fragment="addCommonScript">
-    <div id="map" style="width:100%;height:350px;"></div>
-
-    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f89d7a2ca3d8a63ef834d0ef49e4349e"></script>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=accdb0b1755dfe36354d015faaeeff10&libraries=services"></script>
 </th:block>
 
 <main layout:fragment="content">
     <div id="map1"></div>
     <div id="map2"></div>
     <div id="map3"></div>
-<!--     <button type="button" class="remove">마커1 제거</button>-->
-<!--     <button type="button" class="remove">마커2 제거</button>-->
-<!--     <button type="button" class="remove">마커3 제거</button>-->
 </main>
 </html>
