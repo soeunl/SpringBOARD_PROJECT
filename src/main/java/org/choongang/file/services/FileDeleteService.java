@@ -1,4 +1,4 @@
-package org.choongang.file.service;
+package org.choongang.file.services;
 
 
 import lombok.RequiredArgsConstructor;

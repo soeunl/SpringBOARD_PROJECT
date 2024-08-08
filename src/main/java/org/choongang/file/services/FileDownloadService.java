@@ -4,7 +4,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.choongang.file.entities.FileInfo;
 import org.choongang.file.exceptions.FileNotFoundException;
-import org.choongang.file.service.FileInfoService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 

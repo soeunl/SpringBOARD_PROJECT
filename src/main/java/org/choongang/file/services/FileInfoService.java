@@ -1,4 +1,4 @@
-package org.choongang.file.service;
+package org.choongang.file.services;
 
 import com.querydsl.core.BooleanBuilder;
 import jakarta.servlet.http.HttpServletRequest;

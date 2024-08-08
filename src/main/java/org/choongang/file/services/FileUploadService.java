@@ -3,7 +3,6 @@ package org.choongang.file.services;
 import lombok.RequiredArgsConstructor;
 import org.choongang.file.entities.FileInfo;
 import org.choongang.file.repositories.FileInfoRepository;
-import org.choongang.file.service.FileInfoService;
 import org.choongang.global.configs.FileProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Service;

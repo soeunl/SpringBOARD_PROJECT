@@ -2,8 +2,8 @@ package org.choongang.file.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.choongang.file.entities.FileInfo;
-import org.choongang.file.service.FileDeleteService;
-import org.choongang.file.service.FileInfoService;
+import org.choongang.file.services.FileDeleteService;
+import org.choongang.file.services.FileInfoService;
 import org.choongang.file.services.FileDownloadService;
 import org.choongang.file.services.FileUploadService;
 import org.choongang.global.exceptions.RestExceptionProcessor;
